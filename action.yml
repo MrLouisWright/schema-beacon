@@ -1,0 +1,47 @@
+name: 'schema-beacon'
+description: 'Validate JSON-LD and microdata against schema.org and Google rich-result requirements'
+author: 'Louis Wright'
+branding: { icon: 'code', color: 'blue' }
+inputs:
+  path: { description: 'Built site directory (e.g. dist, public, _site)', default: '.' }
+  base-url: { description: 'Public URL of the site, e.g. https://example.com', default: '' }
+  fail-on: { description: 'critical | high | medium | low | info | none', default: 'high' }
+  config: { description: 'Path to JSON config file', default: '' }
+  sarif: { description: 'Write SARIF to this path', default: '' }
+  json: { description: 'Write JSON report to this path', default: '' }
+  job-summary: { description: 'Write the Markdown report to the job summary (true/false)', default: 'true' }
+  args: { description: 'Extra CLI arguments', default: '' }
+outputs:
+  markdown-file: { description: 'Path of the Markdown report', value: '${{ steps.run.outputs.markdown-file }}' }
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with: { node-version: '20' }
+    - id: run
+      shell: bash
+      env:
+        SB_PATH: ${{ inputs.path }}
+        SB_BASE_URL: ${{ inputs.base-url }}
+        SB_FAIL_ON: ${{ inputs.fail-on }}
+        SB_CONFIG: ${{ inputs.config }}
+        SB_SARIF: ${{ inputs.sarif }}
+        SB_JSON: ${{ inputs.json }}
+        SB_SUMMARY: ${{ inputs.job-summary }}
+        SB_ARGS: ${{ inputs.args }}
+        SB_BIN: ${{ github.action_path }}/bin/schema-beacon.js
+      run: |
+        md="$RUNNER_TEMP/schema-beacon.md"
+        args=("$SB_PATH" --fail-on "$SB_FAIL_ON" --markdown "$md")
+        [ -n "$SB_BASE_URL" ] && args+=(--base-url "$SB_BASE_URL")
+        [ -n "$SB_CONFIG" ] && args+=(--config "$SB_CONFIG")
+        [ -n "$SB_SARIF" ] && args+=(--sarif "$SB_SARIF")
+        [ -n "$SB_JSON" ] && args+=(--json "$SB_JSON")
+        set +e
+        # shellcheck disable=SC2086
+        node "$SB_BIN" "${args[@]}" $SB_ARGS
+        code=$?
+        set -e
+        echo "markdown-file=$md" >> "$GITHUB_OUTPUT"
+        if [ "$SB_SUMMARY" = "true" ] && [ -f "$md" ]; then cat "$md" >> "$GITHUB_STEP_SUMMARY"; fi
+        exit $code
