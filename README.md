@@ -1,5 +1,7 @@
 # schema-beacon
 
+[![npm version](https://img.shields.io/npm/v/schema-beacon.svg)](https://www.npmjs.com/package/schema-beacon) [![CI](https://github.com/MrLouisWright/schema-beacon/actions/workflows/ci.yml/badge.svg)](https://github.com/MrLouisWright/schema-beacon/actions/workflows/ci.yml) [![Node](https://img.shields.io/node/v/schema-beacon.svg)](https://nodejs.org) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > Validate JSON-LD and microdata against schema.org and Google rich-result requirements, across your whole built site.
 
 Structured data fails quietly. A trailing comma makes the whole JSON-LD block invisible. `"price": "$1,299.00"`, `"availability": "in stock"` and `"datePublished": "14/10/2026"` all look fine to a person, but Google throws them away. A template change drops `image` from every recipe, and the rich results disappear a few weeks later. `schema-beacon` reads every page of your build output and checks each JSON-LD block and microdata item. It reports the file, line, severity and a **concrete fix**, in CI, before you deploy.
