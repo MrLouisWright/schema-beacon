@@ -1,6 +1,6 @@
 {
   "name": "schema-beacon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Validate JSON-LD and microdata in a built static site against schema.org types and Google rich-result requirements: parse errors, unknown types, missing required/recommended properties, bad dates, prices, currencies, enums, durations, ratings and breadcrumbs. Text/JSON/SARIF/Markdown, allowlist with expiry, GitHub Action. Zero deps.",
   "type": "module",
   "main": "./src/index.js",
