@@ -84,7 +84,7 @@ MEDIUM   blog/post.html:2 Article.datePublished "14/10/2026" is not an ISO 8601 
 ## Options
 
 ```text
-schema-beacon 1.0.0 — JSON-LD and microdata vs schema.org and Google rich-result requirements
+schema-beacon 1.0.1 — JSON-LD and microdata vs schema.org and Google rich-result requirements
 
 Usage: schema-beacon [site-dir] [options]
 
@@ -174,12 +174,20 @@ The action runs the bundled CLI with Node 20; it has no dependencies to install.
 
 ## Library
 
+Install it in your project first:
+
+```bash
+npm install --save-dev schema-beacon
+```
+
 ```js
 import { check, isIsoDate, suggestType } from 'schema-beacon';
 const report = check('dist');
 console.log(report.info.types); // { Product: 12, BreadcrumbList: 40, ... }
 suggestType('Prodcut'); // 'Product'
 ```
+
+The package is ESM-only (there is no CommonJS build): use `import`, or `await import("schema-beacon")` from CommonJS.
 
 Types are included.
 
